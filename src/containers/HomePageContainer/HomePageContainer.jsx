@@ -82,6 +82,7 @@ class HomePageContainer extends Component {
     axios
       .get(plotLink)
       .then(response => {
+        // eslint-disable-next-line react/no-access-state-in-setstate
         const plotsNow = this.state.numberOfPlotsReceived + 1;
         this.setState({ numberOfPlotsReceived: plotsNow });
         plots[imdbID] = response.data.Plot;
