@@ -11,6 +11,20 @@ import axios from '../../axios-tvshows';
 import Loader from '../../components/UI/Loader/Loader';
 
 let episodeList = [];
+const MONTH_NAMES = [
+  'Jan',
+  'Feb',
+  'Mar',
+  'Apr',
+  'May',
+  'June',
+  'July',
+  'Aug',
+  'Sep',
+  'Oct',
+  'Nov',
+  'Dec'
+];
 
 class HomePageContainer extends Component {
   constructor(props) {
@@ -41,13 +55,16 @@ class HomePageContainer extends Component {
       .then(response => {
         console.log(response.data);
         this.setState({ loading: false });
-        episodeList = response.data.Episodes.map((episode, index) => ({
-          id: index + 1,
-          title: episode.Title,
-          plot: 'Some Plot',
-          monthReleased: episode.Released,
-          imdbRating: episode.imdbRating
-        }));
+        episodeList = response.data.Episodes.map((episode, index) => {
+          const month = +episode.Released.split('-')[1];
+          return {
+            id: index + 1,
+            title: episode.Title,
+            plot: 'Some Plot',
+            monthReleased: MONTH_NAMES[month],
+            imdbRating: episode.imdbRating
+          };
+        });
 
         this.setState({ loading: false });
       })
