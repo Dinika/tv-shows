@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import TextField from '@material-ui/core/TextField';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
+import Button from '@material-ui/core/Button';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
@@ -21,6 +22,19 @@ class HomePageContainer extends Component {
   }
 
   componentDidMount() {
+    this.getTVShowEpisodes();
+  }
+
+  onTVShowNameChange(event) {
+    this.setState({ tvShow: event.target.value });
+  }
+
+  onTVShowNameSubmitted() {
+    this.setState({ loading: true });
+    this.getTVShowEpisodes();
+  }
+
+  getTVShowEpisodes() {
     const tvShowLink = `/?apikey=86e5149f&t=${this.state.tvShow}&Season=1`;
     axios
       .get(tvShowLink)
@@ -74,21 +88,32 @@ class HomePageContainer extends Component {
         </TableBody>
       </Table>
     );
+
     return (
       <div className={classes.MainContainer}>
-        <TextField
-          id="outlined-full-width"
-          label="File Name"
-          style={{ margin: 8 }}
-          placeholder="Example Frozen yoghurt"
-          fullWidth
-          margin="normal"
-          variant="outlined"
-          value={this.state.tvShow}
-          InputLabelProps={{
-            shrink: true
-          }}
-        />
+        <div className={classes.InputContainer}>
+          <TextField
+            id="outlined-full-width"
+            label="TV Show"
+            style={{ margin: 8 }}
+            placeholder="Example: Silicon Valley"
+            margin="normal"
+            variant="outlined"
+            value={this.state.tvShow}
+            InputLabelProps={{
+              shrink: true
+            }}
+            onChange={this.onTVShowNameChange.bind(this)}
+          />
+          <Button
+            variant="contained"
+            color="primary"
+            className={classes.button}
+            onClick={this.onTVShowNameSubmitted.bind(this)}
+          >
+            Search
+          </Button>
+        </div>
         {loadingOrTable}
       </div>
     );

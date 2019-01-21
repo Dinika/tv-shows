@@ -3,3 +3,10 @@
   margin-top: 50px;
   overflowx: auto;
 }
+
+.InputContainer {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
