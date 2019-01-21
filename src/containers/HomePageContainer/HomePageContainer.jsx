@@ -121,7 +121,7 @@ class HomePageContainer extends Component {
                 {row.id}
               </TableCell>
               <TableCell align="left">{row.title}</TableCell>
-              <TableCell align="right">
+              <TableCell align="left">
                 {this.state.numberOfPlotsReceived === episodeList.length
                   ? HomePageContainer.renderPlot(row.imdbID)
                   : 'Loading Plot'}
