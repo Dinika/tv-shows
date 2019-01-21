@@ -25,13 +25,15 @@ const MONTH_NAMES = [
   'Nov',
   'Dec'
 ];
+const plots = {};
 
 class HomePageContainer extends Component {
   constructor(props) {
     super(props);
     this.state = {
       loading: true,
-      tvShow: 'Silicon Valley'
+      tvShow: 'Silicon Valley',
+      numberOfPlotsReceived: 0
     };
   }
 
@@ -53,16 +55,17 @@ class HomePageContainer extends Component {
     axios
       .get(tvShowLink)
       .then(response => {
-        console.log(response.data);
-        this.setState({ loading: false });
+        this.setState({ loading: false, numberOfPlotsReceived: 0 });
         episodeList = response.data.Episodes.map((episode, index) => {
           const month = +episode.Released.split('-')[1];
+          this.getEpisodePlot(episode.imdbID);
           return {
             id: index + 1,
             title: episode.Title,
             plot: 'Some Plot',
             monthReleased: MONTH_NAMES[month],
-            imdbRating: episode.imdbRating
+            imdbRating: episode.imdbRating,
+            imdbID: episode.imdbID
           };
         });
 
@@ -72,6 +75,26 @@ class HomePageContainer extends Component {
         // eslint-disable-next-line no-console
         console.log(error);
       });
+  }
+
+  getEpisodePlot(imdbID) {
+    const plotLink = `?apikey=86e5149f&i=${imdbID}&plot=short&r=json`;
+    axios
+      .get(plotLink)
+      .then(response => {
+        const plotsNow = this.state.numberOfPlotsReceived + 1;
+        this.setState({ numberOfPlotsReceived: plotsNow });
+        plots[imdbID] = response.data.Plot;
+      })
+      .catch(error => {
+        // eslint-disable-next-line no-console
+        console.log(error);
+      });
+  }
+
+  static renderPlot(imdbID) {
+    const plot = plots[imdbID] ? plots[imdbID] : 'Loading Plot';
+    return plot;
   }
 
   render() {
@@ -96,7 +119,11 @@ class HomePageContainer extends Component {
                 {row.id}
               </TableCell>
               <TableCell align="left">{row.title}</TableCell>
-              <TableCell align="right">{row.plot}</TableCell>
+              <TableCell align="right">
+                {this.state.numberOfPlotsReceived === episodeList.length
+                  ? HomePageContainer.renderPlot(row.imdbID)
+                  : 'Loading Plot'}
+              </TableCell>
               <TableCell align="right">Image</TableCell>
               <TableCell align="right">{row.monthReleased}</TableCell>
               <TableCell align="right">{row.imdbRating}</TableCell>
