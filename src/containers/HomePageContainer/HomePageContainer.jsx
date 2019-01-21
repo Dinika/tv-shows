@@ -9,6 +9,7 @@ import TableRow from '@material-ui/core/TableRow';
 import classes from './HomePageContainer.module.css';
 import axios from '../../axios-tvshows';
 import Loader from '../../components/UI/Loader/Loader';
+import image from '../../tvImage.jpg';
 
 let episodeList = [];
 const MONTH_NAMES = [
@@ -125,7 +126,9 @@ class HomePageContainer extends Component {
                   ? HomePageContainer.renderPlot(row.imdbID)
                   : 'Loading Plot'}
               </TableCell>
-              <TableCell align="right">Image</TableCell>
+              <TableCell align="right">
+                <img src={image} alt="TV Show IMage" />
+              </TableCell>
               <TableCell align="right">{row.monthReleased}</TableCell>
               <TableCell align="right">{row.imdbRating}</TableCell>
             </TableRow>
